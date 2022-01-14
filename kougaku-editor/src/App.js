@@ -2,6 +2,7 @@ import './App.css';
 import {Title} from "./components/Title";
 import {InputForm} from "./components/InputForm";
 import {ItemList} from "./components/ItemList";
+import { DrawCanvas } from './components/DrawCanvas';
 import Sidebar from "./components/Sidebar";
 import React, {useState} from 'react'
 
@@ -11,8 +12,9 @@ function App() {
   return (
     <div className="body">
       <div className="editArea">
+        <Sidebar />
         <div className="displayArea">
-          <Sidebar />
+            <DrawCanvas />
         </div>
         <div className="itemListArea">
           <Title />
