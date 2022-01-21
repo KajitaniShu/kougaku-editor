@@ -28,7 +28,7 @@ header {
 
 .displayArea{
   flex:80%;
-  position: relative;
+  overflow: hidden;
 }
 
 .itemListArea{
@@ -156,8 +156,8 @@ button {
   width: 100%;
 }
 
-.sidebarList #active {
-  background-color: #282c34;
+.sidebarList .selected {
+  background-color: #232732;
   color:#DDDDDD;
 }
 
@@ -183,7 +183,6 @@ button {
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: #282c34;
 }
 
 .detailInput{
@@ -204,9 +203,55 @@ button {
   width: 100%;
 }
 
+.deleteButton{
+  text-align: right;
+}
+
 .displayArea canvas{
   position: absolute;
-  top:0;
-  left: 0;
   background-color: #282c34;
+}
+
+
+
+/* 2D表示部分 */
+.drop_area div {
+  width: 50px;
+  height: 50px;
+}
+
+.drop_area img {
+  width: 50px;
+}
+
+.drop_area button {
+  margin: 10% auto;
+  padding: 10% auto;
+}
+
+.drop_area .move{
+  position: absolute;
+  transform: rotate(0deg);
+}
+
+.drop_area .move.selected{
+  border: solid 1px #33E0FF;
+}
+
+.drop_area div.b {
+  background-color: blue;
+}
+
+.drop_area div.r {
+  background-color: red;
+}
+
+.drop_area div.g {
+  background-color: green;
+}
+
+.drop_area {
+  background-color: #282c34;
+  width: 100%;
+  height: 100%;
 }

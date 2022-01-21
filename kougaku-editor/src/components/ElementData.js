@@ -1,29 +1,22 @@
-import React from 'react'
-import LightModeIcon from '@mui/icons-material/LightMode';
-import FlashlightOnIcon from '@mui/icons-material/FlashlightOn';
-import SearchIcon from '@mui/icons-material/Search';
-import NetworkWifiIcon from '@mui/icons-material/NetworkWifi';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-
 export const ElementData = [
     {
-        type: "light",
-        icon: <LightModeIcon/>,
+        value: "laser",
+        dispName: "レーザー",
+        img: "img/test.img"
     },
     {
-        type: "lightSource",
-        icon: <FlashlightOnIcon/>,
+        value: "lens",
+        dispName: "レンズ",
+        img: "img/test.img"
     },
     {
-        type: "lens",
-        icon: <SearchIcon/>,
+        value: "beamExpander",
+        dispName: "ビームエキスパンダ",
+        img: "img/test.img"
     },
     {
-        type: "beamExpander",
-        icon: <NetworkWifiIcon/>,
-    },
-    {
-        type: "camera",
-        icon: <CameraAltIcon/>,
-    },
+        value: "camera",
+        dispName: "カメラ",
+        img: "img/test.img"
+    }
 ];

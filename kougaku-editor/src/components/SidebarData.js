@@ -7,13 +7,16 @@ export const SidebarData = [
     {
         title: "ホーム",
         icon: <HomeIcon/>,
+        selected: false
     },
     {
         title: "エディタ",
         icon: <EditIcon/>,
+        selected: true
     },
     {
         title: "ヘルプ",
         icon: <HelpIcon/>,
+        selected: false
     },
 ];

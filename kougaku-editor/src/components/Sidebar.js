@@ -7,7 +7,7 @@ export default function Sidebar() {
             <ul className="sidebarList">
                 {SidebarData.map((value, key) => {
                     return (
-                        <li key={key} className="row">
+                        <li key={key} className={`row ${value.selected ? "selected" : ""}`}>
                             <div id="icon">{value.icon}</div>
                         </li>
                     )

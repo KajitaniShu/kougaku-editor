@@ -9,7 +9,7 @@ export const ItemList = ({itemList, setItemList}) => {
             <TransitionGroup>
                 {itemList.map((item, index) => (
                     <Collapse key={index}>
-                        <Item item={item}  itemList={itemList} setItemList={setItemList} index={index}/>
+                        <Item item={item}  itemList={itemList} setItemList={setItemList}/>
                     </Collapse>
                 ))}
             </TransitionGroup>
