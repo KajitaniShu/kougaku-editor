@@ -6,6 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import {ElementData} from './ElementData';
 import { makeStyles } from '@mui/styles';
+import * as THREE from 'three'
 
 
 const useStyles = makeStyles({
@@ -17,22 +18,32 @@ const useStyles = makeStyles({
 export const SelectBox = ({itemList, setItemList}) => {
 
     const style = useStyles();
+    
 
     const handleChange = (event) => {
-        console.log(event);
-        setItemList([
-            ...itemList, 
-            {
-                id: event.target.value + itemList.length,
-                type: event.target.value,
-                name: event.target.value,
-                selected: false,
-                x:0.0,
-                y:0.0,
-                z:0.0,
-                rotate: 0
+        ElementData.map((value, key) => {
+            // 同じ素子の何個使われているか調べる
+            var count = 0;
+            {itemList.map((value, key) => {
+                if(value.type == event.target.value) count++;
+            })}
+            
+            if(value.value === event.target.value){
+                setItemList([
+                    ...itemList, 
+                    {
+                        id: event.target.value + itemList.length,
+                        input_path: value.input_path,
+                        type: event.target.value,
+                        name: value.name+count,
+                        selected: false,
+                        pos: [0, 0, 0],
+                        rotate: 0
+                    }
+                ]);
             }
-        ]);
+        });
+        
     };
 
     return (
@@ -46,7 +57,7 @@ export const SelectBox = ({itemList, setItemList}) => {
             >
                 {ElementData.map((value, key) => {
                     return (
-                        <MenuItem key={key} value={value.value}>{value.dispName}</MenuItem>
+                        <MenuItem key={key} value={value.value}>{value.name}</MenuItem>
                     )
                 })}
                 <MenuItem key={-1} value={""}>戻る</MenuItem>

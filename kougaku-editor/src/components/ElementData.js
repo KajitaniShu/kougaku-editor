@@ -1,22 +1,21 @@
 export const ElementData = [
     {
         value: "laser",
-        dispName: "レーザー",
-        img: "img/test.img"
+        name: "レーザー",
+        img: "images/test.img",
+        input_path: "./models/laser.glb"
     },
     {
         value: "lens",
-        dispName: "レンズ",
-        img: "img/test.img"
-    },
-    {
-        value: "beamExpander",
-        dispName: "ビームエキスパンダ",
-        img: "img/test.img"
+        name: "レンズ",
+        img: "images/test.img",
+        input_path: "./models/lens.glb"
+        
     },
     {
         value: "camera",
-        dispName: "カメラ",
-        img: "img/test.img"
+        name: "カメラ",
+        img: "images/test.img",
+        input_path: "./models/camera.glb"
     }
 ];

@@ -1,6 +1,5 @@
 import './App.css';
 import {Title} from "./components/Title";
-import {InputForm} from "./components/InputForm";
 import {ItemList} from "./components/ItemList";
 import Sidebar from "./components/Sidebar";
 import { DisplayArea} from "./components/DisplayArea";
@@ -14,15 +13,13 @@ function App() {
     <div className="body">
       <div className="editArea">
       <Sidebar />
-      <div className="displayArea" ><DisplayArea itemList={itemList}/></div>
+      <div className="displayArea" ><DisplayArea itemList={itemList} setItemList={setItemList}/></div>
       <div className="itemListArea">
         <Title />
         <SelectBox itemList={itemList} setItemList={setItemList}/>
         <ItemList itemList={itemList} setItemList={setItemList}/>
       </div>
       </div>
-      
-      
     </div>
   );
 }
