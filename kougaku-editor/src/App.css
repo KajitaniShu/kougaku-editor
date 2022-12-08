@@ -1,272 +1,38 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.App {
+  text-align: center;
 }
 
-body {
-  font-family: 'Poppins', sans-serif;
-  font-family: 'Roboto Condensed', sans-serif;
-  width: 100vw;
-  height: 100vh;
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
   background-color: #282c34;
-}
-
-header {
-  text-align: center;
-  margin: 2rem auto;
-  font-weight: 600;
-  color: #DDDDDD;
-  padding: 2rem ;
-}
-
-.editArea{
+  min-height: 100vh;
   display: flex;
-  width: 100vw;
-  height: 100vh;
-}
-
-.displayArea{
-  flex:80%;
-  overflow: hidden;
-}
-
-.itemListArea{
-  flex:20%;
-  background-color: #191d25;
-  height: 100vh;
-  padding: 1.4em;
-}
-
-.sidebar {
-  height: 100%;
-  width: 60px;
-  background-color: #191d25;
-  color: #DDDDDD;
-}
-
-.inputForm {
-  width: 100%;
-  text-align: center;
-  position: relative;
-}
-
-.inputForm input {
-  width: 80%;
-  height: 1.7rem;
-  padding: 0.5rem;
-  border: none;
-  border-radius: 5px 0 0 5px;
-  background-color: #DDDDDD;
-}
-
-.inputForm button {
-  width: 20%;
-  height: 1.7rem;
-  text-align: center;
-  background: #FDB827;
-  border: none;
-  border-radius: 0 5px 5px 0;
-}
-
-.item {
-  margin: 0.5em 0;
-  width: 100%;
-  border: none;
-  background: #383c44;
-}
-
-.element{
-  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.itemList{
-  width: 100%;
-  height:60vh;
-  margin-top: 2rem;
-  
-  overflow-y: scroll;
-  -ms-overflow-style: none;
-}
-
-.itemList::-webkit-scrollbar {
-  display:none;
-}
-
-.completed {
-  text-decoration: line-through;
-  opacity: 0.5;
-}
-
-
-.icons .fa-check-circle {
-  height: 2.4em;
-  line-height: 2.4em;
-  padding: 0em 0.7em;
-  background-color: #383c44;
-  color: #DDDDDD;
-}
-
-.icons .fa-trash {
-  height: 2.4em;
-  line-height: 2.4em;
-  padding: 0em 0.7em;
-  background-color: #383c44;
-  color: #DDDDDD;
-}
-
-.itemText {
-  overflow: hidden;
-  width: 75%;
-  height: 2em;
-  line-height: 2em;
-  padding: 0em 0.7em;
-  background: #383c44;
-  color: #DDDDDD;
-}
-
-.radiusTopLeft{
-  border-top-left-radius: 5px;
-}
-
-.radiusTopRight{
-  border-top-right-radius: 5px;
-}
-
-.radiusBottomLeft{
-  border-bottom-left-radius: 5px;
-}
-
-.radiusBottomRight{
-  border-bottom-right-radius: 5px;
-}
-
-
-
-button {
-  border: none;
-  background-color: #191d25;
-}
-
-.sidebarList {
-  height: auto;
-  padding: 0;
-  width: 100%;
-}
-
-.sidebarList .selected {
-  background-color: #232732;
-  color:#DDDDDD;
-}
-
-.sidebarList .row {
-  width: 100%;
-  height: 60px;
-  line-height: 75px;
-  text-align: center;
-}
-
-.sidebarList .row:hover {
-  cursor:pointer;
-  background-color: #282c34;
-  color:#DDDDDD;
-}
-
-.detail {
-  margin-right: auto;
-  margin-left: auto;
-  padding: 1em;
-  line-height: 2em;
-  width: 86%;
-  align-items: center;
-  justify-content: center;
-  border: none;
-}
-
-.detailInput{
-  display: flex;
-  margin-top: 0.5em;
-  align-items: center;
-  justify-content: center;
-}
-
-.detailInput p{
-  flex:30%;
-  text-align: center;
-  color: #DDDDDD;
-}
-.detailInput input{
-  flex:70%;
-  border-radius: 5px;
-  width: 100%;
-}
-
-.deleteButton{
-  text-align: right;
-}
-
-.displayArea canvas{
-  position: absolute;
-  background-color: #282c34;
-}
-
-
-
-/* 2D表示部分 */
-.Draw2D{
-  width: 100%;
-  height: 100%;
-}
-
-.Draw2D img {
-  position:absolute;
-  width: 50px;
-}
-
-.Draw2D button {
-  margin: 10% auto;
-  padding: 10% auto;
-}
-
-.Draw2D .move{
-  position: absolute;
-  transform: rotate(0deg);
-}
-
-.Draw2D .move.selected{
-  border: solid 1px #33E0FF;
-}
-
-.Draw2D div.b {
-  background-color: blue;
-}
-
-.Draw2D div.r {
-  background-color: red;
-}
-
-.Draw2D div.g {
-  background-color: green;
-}
-
-.drop_area {
-  z-index:100;
-  position: relative;
-  background-color:white;
-  width: 100%;
-  height: 70vh;
-}
-
-
-/*3D空間内のHTML要素*/
-.innerText{
-  text-align: center;
-  font-weight: bold;
+  font-size: calc(10px + 2vmin);
   color: white;
-  background-color: #212121;
-  opacity: 0.8;
-  padding: 0.2em 0.5em;
-  border-radius: 5px;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
