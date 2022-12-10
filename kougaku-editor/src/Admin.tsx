@@ -28,7 +28,7 @@ import { useForm } from '@mantine/form';
 import { PageNotFound } from './PageNotFound';
 import { Login } from './Login';
 import { db }  from './firebase';
-import {collection, doc, getDocs, setDoc, writeBatch} from 'firebase/firestore';
+import {collection, doc, getDocs, query, where } from 'firebase/firestore';
 import { auth } from './firebase'
 import { useAuthState, useSignInWithFacebook } from 'react-firebase-hooks/auth'
 import { useParams } from 'react-router-dom'
@@ -110,16 +110,23 @@ export default function Admin() {
   const [active, setActive] = useState('一覧');
   const [database, setDatabase] = useState(); 
   const contentsList = [{id:1, name:"name1", timestamp:"20221207"}, {id:2, name:"name2", timestamp:"20221207"},{id:3, name:"name3", timestamp:"20221207"}]
-
+  
   useEffect(() => {
     if(user && database === undefined){
       // データを取得
-      const dataList = collection(db, "test");
+      let _database: any = [];
+      const dataList = query(collection(db, "user-data"), where("uuid", "==", "uuid-1234"));
       getDocs(dataList).then((snapShot)=>{
-        const _data = JSON.stringify(snapShot.docs.map((doc) => ({...doc.data()})));
-        setDatabase(JSON.parse(_data));
-        console.log(JSON.parse(_data));
+        const _data = JSON.stringify(snapShot.docs.map((doc) => {
+          const data = doc.data();
+          _database.push({
+            id: doc.ref.id,
+            ...data
+          })
+        }));
       })
+      setDatabase(_database);
+      console.log(_database);
     }
   }, [user]);
 
@@ -208,19 +215,20 @@ export default function Admin() {
         <Card.Section>
         
       {(() => {
-        
-        if(true){
-          {console.log(contentsList)}
-          {/*return <ContentsList contentsList={contentsList} setContentsId={setContentsId} />*/}
-          return <Editor/>
-        }else
-        if(user && database !== undefined ) {
-          if (active === "一覧" && contentsList !== undefined) {
-            return <ContentsList contentsList={contentsList} setContentsId={setContentsId} />
-          } else return  <PageNotFound />            
-        } else {
+        if(!user) return <Login />;   // ユーザー情報がない → ログイン画面を表示
+        else {                        // ユーザー情報がある
 
-          return <Login />;
+          
+          if(!contentsId && database !== undefined) {                       // コンテンツID (編集用ID) がない → コンテンツ一覧を表示
+            console.log(database)
+            return <ContentsList database={database} setContentsId={setContentsId} />
+          
+            
+          }else if( database !== undefined ) {    // コンテンツID (編集用ID) がある & データが取得できている → 編集画面へ
+            if (active === "一覧" && contentsList !== undefined) {
+              return <ContentsList database={database} setContentsId={setContentsId} />
+            } else return  <PageNotFound />
+          }
         }
       })()}
       </Card.Section>

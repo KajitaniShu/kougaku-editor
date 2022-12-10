@@ -16,11 +16,11 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface ContentsListProps {
-  contentsList:{id:number, name: string, timestamp: string}[],
+  database:  any,
   setContentsId: any
 }
 
-export function ContentsList({ contentsList, setContentsId }: ContentsListProps) {
+export function ContentsList({ database, setContentsId }: ContentsListProps) {
   const { classes, cx } = useStyles();
   const [selection, setSelection] = useState([1]);
   
@@ -29,37 +29,9 @@ export function ContentsList({ contentsList, setContentsId }: ContentsListProps)
       current.includes(id) ? current.filter((item) => item !== id) : [...current, id]
     );
   const toggleAll = () =>
-    setSelection((current) => (current.length === contentsList.length ? [] : contentsList.map((item) => item.id)));
+    setSelection((current) => (current.length === database.length ? [] : database.map((item: any) => item.id)));
 
-  const rows = contentsList.map((item) => {
-    const selected = selection.includes(item.id);
-    return (
-      <tr key={item.id} className={cx({ [classes.rowSelected]: selected })}>
-        <td>
-          <Checkbox
-            checked={selection.includes(item.id)}
-            onChange={() => toggleRow(item.id)}
-            transitionDuration={0}
-          />
-        </td>
-        <td>
-            <Text size="sm" weight={500}>
-              {item.id}
-            </Text>
-        </td>
-        <td>
-            <Text size="sm" weight={500}>
-              {item.name}
-            </Text>
-        </td>
-        <td>
-            <Text size="sm" weight={500}>
-              {item.timestamp}
-            </Text>
-        </td>
-      </tr>
-    );
-  });
+    
 
   return (
     <Container>
@@ -82,17 +54,46 @@ export function ContentsList({ contentsList, setContentsId }: ContentsListProps)
               <th>
                 <Checkbox
                   onChange={toggleAll}
-                  checked={selection.length === contentsList.length}
-                  indeterminate={selection.length > 0 && selection.length !== contentsList.length}
+                  checked={selection.length === database.length}
+                  indeterminate={selection.length > 0 && selection.length !== database.length}
                   transitionDuration={0}
                 />
               </th>
               <th>id</th>
               <th>name</th>
-              <th>date</th>
+              <th>update</th>
             </tr>
           </thead>
-          <tbody>{rows}</tbody>
+          <tbody>{
+          database.map((item: any) => {
+            const selected = selection.includes(item.id);
+            return (
+              <tr key={item.id} className={cx({ [classes.rowSelected]: selected })}>
+                <td>
+                  <Checkbox
+                    checked={selection.includes(item.id)}
+                    onChange={() => toggleRow(item.id)}
+                    transitionDuration={0}
+                  />
+                </td>
+                <td>
+                    <Text size="sm" weight={500}>
+                      {item.id}
+                    </Text>
+                </td>
+                <td>
+                    <Text size="sm" weight={500}>
+                      {item.name}
+                    </Text>
+                </td>
+                <td>
+                    <Text size="sm" weight={500}>
+                      {String(item.update.toDate().toLocaleString())}
+                    </Text>
+                </td>
+              </tr>
+          )})
+          }</tbody>
         </Table>
       </ScrollArea>
       </Paper>
