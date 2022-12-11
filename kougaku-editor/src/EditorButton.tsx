@@ -3,7 +3,7 @@ import { Button, createStyles, Box, Group, Affix } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
 import { storage, db } from './firebase';
 import { ref, uploadString } from "firebase/storage";
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, Timestamp } from 'firebase/firestore';
 
 
 const useStyles = createStyles((theme) => ({
@@ -17,13 +17,16 @@ const useStyles = createStyles((theme) => ({
 
 
 async function uploadData(data: any, setIsUploading: any) {
-
-await setDoc(doc(db, "user-data", "id1234"), {json: JSON.stringify(data.values.value), uuid:"uuid-1234"});
-  
+  const id     = data.id;
+  const json   = JSON.stringify(data.json);
+  const update = Timestamp.now();
+  const uuid   = data.uuid;
+  const name   = data.name;
+  await setDoc(doc(db, "user-data", id), {uuid: uuid, name: name, json: json, update: update});
 }
 
 
-export function EditorButton({data}: any) {
+export function EditorButton({data, database,  setData}: any) {
   const { classes } = useStyles();
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
@@ -31,15 +34,18 @@ export function EditorButton({data}: any) {
     ['ctrl+s', () => uploadData(data, setIsUploading)],
   ]);
 
-  function addObj() {
-    data.insertListItem('value', 
-    {
+  async function addObj() {
+    console.log(data)
+    let _data = data;
+
+    _data.json.push({
       'type':     "box", 
       'position': [0.0, 0.0, 0.0],
       'rotation': [0.0, 0.0, 0.0],
       'scale':    [1.0, 1.0, 1.0],
-    }, 
-    data.values.value.length);
+    });
+    setData({id: data.id, name: data.name, uuid: data.uuid, json: _data.json, update: data.update});
+    console.log(data)
   }
   
 
@@ -47,7 +53,7 @@ export function EditorButton({data}: any) {
       <Button.Group className={classes.buttonlist}>
       <Button variant="default" onClick={addObj}>追加</Button>
       <Button variant="default">表示</Button>
-      <Button variant="default" onClick={() => console.log('保存')}>保存</Button>
+      <Button variant="default" onClick={() => uploadData(data, setIsUploading)}>保存</Button>
     </Button.Group>
   );
 }

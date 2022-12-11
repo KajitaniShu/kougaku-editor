@@ -108,26 +108,28 @@ export default function Admin() {
   const { classes, cx } = useStyles();
   const [opened, { toggle, close }] = useDisclosure(false);
   const [active, setActive] = useState('一覧');
-  const [database, setDatabase] = useState(); 
-  const contentsList = [{id:1, name:"name1", timestamp:"20221207"}, {id:2, name:"name2", timestamp:"20221207"},{id:3, name:"name3", timestamp:"20221207"}]
+  const [database, setDatabase] = useState<any>(); 
   
   useEffect(() => {
     if(user && database === undefined){
       // データを取得
       let _database: any = [];
-      const dataList = query(collection(db, "user-data"), where("uuid", "==", "uuid-1234"));
+      const dataList = query(collection(db, "user-data"), where("uuid", "==", user.uid));
       getDocs(dataList).then((snapShot)=>{
         const _data = JSON.stringify(snapShot.docs.map((doc) => {
           const data = doc.data();
           _database.push({
-            id: doc.ref.id,
-            ...data
+            id:     doc.ref.id,
+            name:   data.name,
+            uuid:   data.uuid,
+            update: data.update,
+            json:   JSON.parse(data.json || "[]")
           })
         }));
+        setDatabase(_database);
       })
-      setDatabase(_database);
-      console.log(_database);
     }
+    
   }, [user]);
 
   const links = data.map((item) => (
@@ -156,7 +158,7 @@ export default function Admin() {
       }}
       navbarOffsetBreakpoint="sm"
       navbar={
-        
+          
           <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
             <ScrollArea offsetScrollbars scrollbarSize={6}>
             <Navbar.Section grow>
@@ -187,7 +189,6 @@ export default function Admin() {
             </ScrollArea>
           </Navbar>
         
-        
       }
       header={
         <Header height={70} p="md">
@@ -215,21 +216,15 @@ export default function Admin() {
         <Card.Section>
         
       {(() => {
+        console.log(contentsId)
         if(!user) return <Login />;   // ユーザー情報がない → ログイン画面を表示
-        else {                        // ユーザー情報がある
-
+        else if (database !== undefined){                        // ユーザー情報がある
+          if(!contentsId) return <ContentsList database={database} setDatabase={setDatabase} setContentsId={setContentsId} uuid={user.uid}/>   // コンテンツID (編集用ID) がない → コンテンツ一覧を表示
           
-          if(!contentsId && database !== undefined) {                       // コンテンツID (編集用ID) がない → コンテンツ一覧を表示
-            console.log(database)
-            return <ContentsList database={database} setContentsId={setContentsId} />
-          
-            
-          }else if( database !== undefined ) {    // コンテンツID (編集用ID) がある & データが取得できている → 編集画面へ
-            if (active === "一覧" && contentsList !== undefined) {
-              return <ContentsList database={database} setContentsId={setContentsId} />
-            } else return  <PageNotFound />
-          }
-        }
+          // コンテンツID (編集用ID) がある & データが取得できている → 編集画面へ
+          else if(contentsId !== "") return <Editor database={database} setDatabase={setDatabase} contentsId={contentsId} setContentsId={setContentsId} uuid={user.uid}/>;
+          else return  <PageNotFound />;
+        }else return  <PageNotFound />;
       })()}
       </Card.Section>
       </Card>

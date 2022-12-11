@@ -10,6 +10,7 @@ import {
 import { Home } from './Home';
 import { PageNotFound } from './PageNotFound';
 import { MantineProvider, ColorSchemeProvider, ColorScheme } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
 
 
 export function App() {
@@ -20,13 +21,15 @@ export function App() {
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
-      <Routes>
-        <Route index element={<Admin />} />
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
-    </BrowserRouter>
-    </MantineProvider>
+        <ModalsProvider>
+          <BrowserRouter basename={process.env.PUBLIC_URL}>
+            <Routes>
+              <Route index element={<Admin />} />
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </ModalsProvider>
+      </MantineProvider>
     </ColorSchemeProvider>
   )
 }

@@ -11,21 +11,32 @@ import {
 
 softShadows()
 
+interface EditorProps {
+  database:  any,
+  setDatabase: any,
+  contentsId: any,
+  setContentsId: any
+  uuid: string
+}
+
+
 function hundleChange (ref: any) {
   console.log(ref.current.position, ref.current.rotation, ref.current.scale);
 }
 
-export function Editor() {
-  const [mode, setMode] = useState<"none" | "translate" | "rotate" | "scale">("none");
-  const objectData = useForm({
-    initialValues: {
-      value: [{type: "box", position: [0.0, 0.0, 0.0], rotation: [0.0, 0.0, 0.0], scale: [1.0, 1.0, 1.0]}]
-    },
-  });
 
+
+export function Editor({ database, setDatabase, contentsId, setContentsId, uuid }: EditorProps) {
+  const [mode, setMode] = useState<"none" | "translate" | "rotate" | "scale">("none");
+  const [data, setData] = useState(database.filter(function(object: any) {
+    // idが「1」の配列のみ返します。
+    return object.id == contentsId
+  }).shift())
+  console.log(data)
+  
   return (
     <>
-      <EditorButton data={objectData} />
+      <EditorButton data={data} database={database} setData={setData} />
       <TransformButton setMode={setMode} />
       <Canvas 
         
@@ -40,11 +51,9 @@ export function Editor() {
         <directionalLight castShadow position={[2.5, 5, 5]} intensity={1.5} shadow-mapSize={[1024, 1024]}>
           <orthographicCamera attach="shadow-camera" args={[-5, 5, 5, -5, 1, 50]} />
         </directionalLight>
-
-        {objectData.values.value.map((data: any, index: number) => (
-          <Object data={objectData} index={index} mode={mode}/>
+        {data && data.json.map((_data: any, index: number) => (
+          <Object database={database} data={data} setData={setData} index={index} mode={mode}/>
         ))}
-        
         
         <mesh scale={1000} receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry />
@@ -61,7 +70,7 @@ export function Editor() {
         
       </GizmoHelper>
       </Canvas>
-          <Code>{JSON.stringify(objectData.values)}</Code>
+          <Code>{JSON.stringify(data)}</Code>
     </>
   )
 }
