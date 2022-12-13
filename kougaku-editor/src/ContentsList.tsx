@@ -18,6 +18,7 @@ const useStyles = createStyles((theme) => ({
 interface ContentsListProps {
   database:  any,
   setDatabase: any,
+  setActive: any,
   setContentsId: any
   uuid: string
 }
@@ -49,8 +50,7 @@ async function deleteItem(database: any, setDatabase: any, id: any, index: numbe
 
 
 
-export function ContentsList({ database, setDatabase, setContentsId, uuid }: ContentsListProps) {
-  console.log(database)
+export function ContentsList({ database, setDatabase, setActive, setContentsId, uuid }: ContentsListProps) {
   const { classes, cx } = useStyles();
   const [selection, setSelection] = useState([1]);
   const deleteModal = (id: any, index: number) =>
@@ -106,7 +106,7 @@ export function ContentsList({ database, setDatabase, setContentsId, uuid }: Con
     
             <tr key={item.id} >
                   <td>
-                    <UnstyledButton onClick={() => setContentsId(item.id)}>
+                    <UnstyledButton onClick={() => {setContentsId(item.id); setActive("エディタ")}}>
                       <Text size="sm" weight={500}>
                         {item.id}
                       </Text>

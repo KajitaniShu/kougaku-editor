@@ -14,21 +14,29 @@ import { Timestamp } from 'firebase/firestore';
 
 interface ObjectProps {
   database: any,
+  setDatabase: any,
   data:     any,
   setData:  any,
   index:    number,
   mode:     "none" | "translate" | "rotate" | "scale"
 }
 
-export function Object({database, data, setData, index, mode}: ObjectProps) {
+export function Object({database, setDatabase, data, setData, index, mode}: ObjectProps) {
   async function hundleChange (ref: any) {
     const _data = data;
     _data.json[index] = {
+      name:     data.json[index].name,
+      type:     data.json[index].type,
       position: [ref.current.parent.position.x, ref.current.parent.position.y, ref.current.parent.position.z], 
       rotation: [ref.current.parent.rotation._x, ref.current.parent.rotation._y, ref.current.parent.rotation._z], 
       scale: [ref.current.parent.scale.x, ref.current.parent.scale.y, ref.current.parent.scale.z]};
     _data.update = Timestamp.now();
     setData(_data);
+
+    let _database = await database.slice(0, database.length);
+
+    _database[index] = _data;
+    setDatabase(_database);
   }
 
   const props = {
@@ -37,10 +45,6 @@ export function Object({database, data, setData, index, mode}: ObjectProps) {
   };
   
   const ref = useRef<any>();
-
-  useEffect(() => {
-    console.log(data.json[index].position[0], data.json[index].position[1], data.json[index].position[2])
-  }, []);
   
   return (
         <TransformControls 

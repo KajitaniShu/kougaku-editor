@@ -17,12 +17,7 @@ import {
   Box,
   Card
 } from '@mantine/core';
-import {
-  IconLogout,
-  IconDeviceTv,
-  IconEdit,
-  IconUserCircle 
-} from '@tabler/icons';
+
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { PageNotFound } from './PageNotFound';
@@ -35,13 +30,8 @@ import { useParams } from 'react-router-dom'
 import { ContentsList } from './ContentsList'
 import { Editor } from './Editor'
 import { ColorModeSwitch } from './ColorModeSwitch'
+import { Sidebar } from './Sidebar'
 
-
-const data = [
-  { link: '/', label: 'プレビュー', icon: IconDeviceTv },
-  { link: '/edit-subtitles', label: '字幕編集', icon: IconEdit },
-  { link: '/account', label: 'アカウント', icon: IconUserCircle },
-];
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const icon:any = getRef('icon');
@@ -101,9 +91,10 @@ const useStyles = createStyles((theme, _params, getRef) => {
 });
 
 
+
 export default function Admin() {
-  const [contentsId, setContentsId] = useState<string>("");
   const [user, initialising] = useAuthState(auth);
+  const [contentsId, setContentsId] = useState<string>("");
   const theme = useMantineTheme();
   const { classes, cx } = useStyles();
   const [opened, { toggle, close }] = useDisclosure(false);
@@ -132,21 +123,7 @@ export default function Admin() {
     
   }, [user]);
 
-  const links = data.map((item) => (
-    <a
-      className={cx(classes.link, { [classes.linkActive]: item.label === active })}
-      href={item.link}
-      key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
-        toggle();
-        setActive(item.label);
-      }}
-    >
-      <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span>{item.label}</span>
-    </a>
-  ));
+  
 
   return (
     
@@ -160,33 +137,7 @@ export default function Admin() {
       navbar={
           
           <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
-            <ScrollArea offsetScrollbars scrollbarSize={6}>
-            <Navbar.Section grow>
-              {links}
-            </Navbar.Section>
-
-            <Navbar.Section className={classes.footer}>
-
-              <a href="/" className={classes.link} onClick={() => auth.signOut()}>
-                <IconLogout className={classes.linkIcon} stroke={1.5} />
-                <span>Logout</span>
-              </a>
-
-            
-            </Navbar.Section>  
-            <Navbar.Section className={classes.footer}>
-              <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-                <span>お問い合わせ</span>
-              </a>
-              <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-                <span>使い方</span>
-              </a>
-              <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-                <span>リリース</span>
-              </a>
-            
-            </Navbar.Section>
-            </ScrollArea>
+            <Sidebar active={active} setActive={setActive} user={user} database={database} setDatabase={setDatabase} contentsId={contentsId} />
           </Navbar>
         
       }
@@ -216,10 +167,9 @@ export default function Admin() {
         <Card.Section>
         
       {(() => {
-        console.log(contentsId)
         if(!user) return <Login />;   // ユーザー情報がない → ログイン画面を表示
         else if (database !== undefined){                        // ユーザー情報がある
-          if(!contentsId) return <ContentsList database={database} setDatabase={setDatabase} setContentsId={setContentsId} uuid={user.uid}/>   // コンテンツID (編集用ID) がない → コンテンツ一覧を表示
+          if(!contentsId) return <ContentsList database={database} setDatabase={setDatabase} setActive={setActive}  setContentsId={setContentsId} uuid={user.uid}/>   // コンテンツID (編集用ID) がない → コンテンツ一覧を表示
           
           // コンテンツID (編集用ID) がある & データが取得できている → 編集画面へ
           else if(contentsId !== "") return <Editor database={database} setDatabase={setDatabase} contentsId={contentsId} setContentsId={setContentsId} uuid={user.uid}/>;

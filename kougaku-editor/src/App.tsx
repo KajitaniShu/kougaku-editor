@@ -24,7 +24,7 @@ export function App() {
         <ModalsProvider>
           <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Routes>
-              <Route index element={<Admin />} />
+              <Route index element={<Admin/>} />
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </BrowserRouter>

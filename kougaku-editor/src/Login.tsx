@@ -5,7 +5,7 @@ import { Center } from '@mantine/core';
 
 export function Login() {
   return (
-    <Center style={{ width: "100%", height: "100%" }}>
+    <Center style={{ width: "100%", height: "100%" }} pt={"40vh"}>
       <SignInWithGoogle/>
     </Center>
   )

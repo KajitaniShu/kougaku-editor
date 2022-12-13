@@ -32,11 +32,10 @@ export function Editor({ database, setDatabase, contentsId, setContentsId, uuid 
     // idが「1」の配列のみ返します。
     return object.id == contentsId
   }).shift())
-  console.log(data)
-  
+
   return (
     <>
-      <EditorButton data={data} database={database} setData={setData} />
+      <EditorButton data={data} database={database} setDatabase={setDatabase} setData={setData} />
       <TransformButton setMode={setMode} />
       <Canvas 
         
@@ -51,8 +50,8 @@ export function Editor({ database, setDatabase, contentsId, setContentsId, uuid 
         <directionalLight castShadow position={[2.5, 5, 5]} intensity={1.5} shadow-mapSize={[1024, 1024]}>
           <orthographicCamera attach="shadow-camera" args={[-5, 5, 5, -5, 1, 50]} />
         </directionalLight>
-        {data && data.json.map((_data: any, index: number) => (
-          <Object database={database} data={data} setData={setData} index={index} mode={mode}/>
+        {(data && data.json !== "") && data.json.map((_data: any, index: number) => (
+          <Object database={database} setDatabase={setDatabase} data={data} setData={setData} index={index} mode={mode} key={index} />
         ))}
         
         <mesh scale={1000} receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
@@ -70,7 +69,6 @@ export function Editor({ database, setDatabase, contentsId, setContentsId, uuid 
         
       </GizmoHelper>
       </Canvas>
-          <Code>{JSON.stringify(data)}</Code>
     </>
   )
 }

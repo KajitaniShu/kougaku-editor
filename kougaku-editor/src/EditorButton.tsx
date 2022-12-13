@@ -26,7 +26,7 @@ async function uploadData(data: any, setIsUploading: any) {
 }
 
 
-export function EditorButton({data, database,  setData}: any) {
+export function EditorButton({data, database, setDatabase, setData}: any) {
   const { classes } = useStyles();
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
@@ -35,17 +35,21 @@ export function EditorButton({data, database,  setData}: any) {
   ]);
 
   async function addObj() {
-    console.log(data)
     let _data = data;
+    const index = data.length;
 
     _data.json.push({
-      'type':     "box", 
+      'type':     "box",
+      'name':     "box",
       'position': [0.0, 0.0, 0.0],
       'rotation': [0.0, 0.0, 0.0],
       'scale':    [1.0, 1.0, 1.0],
     });
     setData({id: data.id, name: data.name, uuid: data.uuid, json: _data.json, update: data.update});
-    console.log(data)
+    let _database = await database.slice(0, database.length);
+
+    _database[index] = _data;
+    setDatabase(_database);
   }
   
 
