@@ -16,26 +16,19 @@ interface ObjectProps {
   database: any,
   setDatabase: any,
   data:     any,
-  setData:  any,
+  contentsIndex: any,
   index:    number,
   mode:     "none" | "translate" | "rotate" | "scale"
 }
 
-export function Object({database, setDatabase, data, setData, index, mode}: ObjectProps) {
+export function Object({database, setDatabase, data, index, contentsIndex, mode}: ObjectProps) {
   async function hundleChange (ref: any) {
-    const _data = data;
-    _data.json[index] = {
-      name:     data.json[index].name,
-      type:     data.json[index].type,
-      position: [ref.current.parent.position.x, ref.current.parent.position.y, ref.current.parent.position.z], 
-      rotation: [ref.current.parent.rotation._x, ref.current.parent.rotation._y, ref.current.parent.rotation._z], 
-      scale: [ref.current.parent.scale.x, ref.current.parent.scale.y, ref.current.parent.scale.z]};
-    _data.update = Timestamp.now();
-    setData(_data);
 
     let _database = await database.slice(0, database.length);
+    _database[contentsIndex].json[index].position = [ref.current.parent.position.x, ref.current.parent.position.y, ref.current.parent.position.z];
+    _database[contentsIndex].json[index].rotation = [ref.current.parent.rotation._x, ref.current.parent.rotation._y, ref.current.parent.rotation._z];
+    _database[contentsIndex].json[index].scale    = [ref.current.parent.scale.x, ref.current.parent.scale.y, ref.current.parent.scale.z];
 
-    _database[index] = _data;
     setDatabase(_database);
   }
 
@@ -45,20 +38,36 @@ export function Object({database, setDatabase, data, setData, index, mode}: Obje
   };
   
   const ref = useRef<any>();
-  
-  return (
-        <TransformControls 
-          {...props} 
-          onMouseUp={(e) => {  if(e) hundleChange(ref) }} 
-          translationSnap={1} 
-          position={[data.json[index].position[0], data.json[index].position[1], data.json[index].position[2]]}
-          rotation={[data.json[index].rotation[0], data.json[index].rotation[1], data.json[index].rotation[2]]}
-          scale=   {[data.json[index].scale[0],    data.json[index].scale[1],    data.json[index].scale[2]]}
+  if(mode !== "none"){
+    return (
+      <TransformControls 
+        mode={mode}
+        onMouseUp={(e) => {  if(e) hundleChange(ref) }} 
+        translationSnap={1} 
+        position={[data.position[0], data.position[1], data.position[2]]}
+        rotation={[data.rotation[0], data.rotation[1], data.rotation[2]]}
+        scale=   {[data.scale[0],    data.scale[1],    data.scale[2]]}
+      >
+        <mesh castShadow matrixAutoUpdate={true} ref={ref} receiveShadow >
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial />
+        </mesh>
+      </TransformControls>
+    )
+  }else{
+    return (
+      <mesh 
+        castShadow 
+        matrixAutoUpdate={true} 
+        ref={ref} 
+        receiveShadow 
+        position={[data.position[0], data.position[1], data.position[2]]}
+        rotation={[data.rotation[0], data.rotation[1], data.rotation[2]]}
+        scale=   {[data.scale[0],    data.scale[1],    data.scale[2]]}
         >
-          <mesh castShadow matrixAutoUpdate={true} ref={ref} receiveShadow >
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial />
-          </mesh>
-        </TransformControls>
-  )
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial />
+      </mesh>
+    )
+  }
 }

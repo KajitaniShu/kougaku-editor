@@ -2,24 +2,18 @@ import React, {useEffect} from 'react'
 import { useForm } from '@mantine/form';
 import { NumberInput, TextInput, Button, Accordion, Grid } from '@mantine/core';
 
-async function formUpdate(form: any, data: any, index: number, database: any, setDatabase: any) {
-  console.log("before: ", data)
-  data= {
-    name:     form.values.name,
-    type:     data.type,
-    position: [form.values.pos_x, form.values.pos_y, form.values.pos_z], 
-    rotation: [form.values.rot_x, form.values.rot_y, form.values.rot_z], 
-    scale:    [form.values.scale_x, form.values.scale_y, form.values.scale_z]
-  };
-
-  console.log("after: ", data)
+async function formUpdate(form: any, data: any, index: number, database: any, setDatabase: any, contentsIndex: any) {
 
   let _database = await database.slice(0, database.length);
-  _database[index] = data;
-  setDatabase(_database);
+  _database[contentsIndex].json[index].position = [form.values.pos_x, form.values.pos_y, form.values.pos_z];
+  _database[contentsIndex].json[index].rotation = [form.values.rot_x, form.values.rot_y, form.values.rot_z];
+  _database[contentsIndex].json[index].scale    = [form.values.scale_x, form.values.scale_y, form.values.scale_z];
+  _database[contentsIndex].json[index].name     = form.values.name;
+  
+  //setDatabase(_database);
 }
 
-export function SidebarData({database, setDatabase, data, index }:any) {
+export function SidebarData({database, setDatabase, data, index, contentsIndex }:any) {
   const form = useForm({
     initialValues: {
       name:   "",
@@ -56,10 +50,6 @@ export function SidebarData({database, setDatabase, data, index }:any) {
   form.values.scale_y = data.scale[1];
   form.values.scale_z = data.scale[2];
 
-  useEffect(() => {
-    //form.values.pos_x
-    formUpdate(form, data, index, database, setDatabase);
-  }, [form]);
 
   return (
     <Accordion.Item  value={"object"+index} key={index}>
@@ -68,19 +58,19 @@ export function SidebarData({database, setDatabase, data, index }:any) {
       </Accordion.Control>
       <Accordion.Panel>
       <Grid>
-        <Grid.Col span={4}><NumberInput precision={5} radius="md" hideControls description="position x" placeholder="position x" {...form.getInputProps('pos_x')}/></Grid.Col>
-        <Grid.Col span={4}><NumberInput precision={5} radius="md" hideControls description="position y" placeholder="position y" {...form.getInputProps('pos_y')}/></Grid.Col>
-        <Grid.Col span={4}><NumberInput precision={5} radius="md" hideControls description="position z" placeholder="position z" {...form.getInputProps('pos_z')}/></Grid.Col>
+        <Grid.Col span={4}><NumberInput onChange={formUpdate(form, data, index, database, setDatabase, contentsIndex)} disabled precision={5} radius="md" hideControls description="position x" placeholder="position x" {...form.getInputProps('pos_x')}/></Grid.Col>
+        <Grid.Col span={4}><NumberInput onChange={formUpdate(form, data, index, database, setDatabase, contentsIndex)} disabled precision={5} radius="md" hideControls description="position y" placeholder="position y" {...form.getInputProps('pos_y')}/></Grid.Col>
+        <Grid.Col span={4}><NumberInput onChange={formUpdate(form, data, index, database, setDatabase, contentsIndex)} disabled precision={5} radius="md" hideControls description="position z" placeholder="position z" {...form.getInputProps('pos_z')}/></Grid.Col>
       </Grid>
       <Grid>
-        <Grid.Col span={4}><NumberInput precision={5} radius="md" hideControls description="rotation x" placeholder="rotation x" {...form.getInputProps('rot_x')}/></Grid.Col>
-        <Grid.Col span={4}><NumberInput precision={5} radius="md" hideControls description="rotation y" placeholder="rotation y" {...form.getInputProps('rot_y')}/></Grid.Col>
-        <Grid.Col span={4}><NumberInput precision={5} radius="md" hideControls description="rotation z" placeholder="rotation z" {...form.getInputProps('rot_z')}/></Grid.Col>
+        <Grid.Col span={4}><NumberInput onChange={formUpdate(form, data, index, database, setDatabase, contentsIndex)} disabled precision={5} radius="md" hideControls description="rotation x" placeholder="rotation x" {...form.getInputProps('rot_x')}/></Grid.Col>
+        <Grid.Col span={4}><NumberInput onChange={formUpdate(form, data, index, database, setDatabase, contentsIndex)} disabled precision={5} radius="md" hideControls description="rotation y" placeholder="rotation y" {...form.getInputProps('rot_y')}/></Grid.Col>
+        <Grid.Col span={4}><NumberInput onChange={formUpdate(form, data, index, database, setDatabase, contentsIndex)} disabled precision={5} radius="md" hideControls description="rotation z" placeholder="rotation z" {...form.getInputProps('rot_z')}/></Grid.Col>
       </Grid>
       <Grid>
-        <Grid.Col span={4}><NumberInput precision={5} radius="md" hideControls description="scale x" placeholder="scale x" {...form.getInputProps('scale_x')}/></Grid.Col>
-        <Grid.Col span={4}><NumberInput precision={5} radius="md" hideControls description="scale y" placeholder="scale y" {...form.getInputProps('scale_y')}/></Grid.Col>
-        <Grid.Col span={4}><NumberInput precision={5} radius="md" hideControls description="scale z" placeholder="scale z" {...form.getInputProps('scale_z')}/></Grid.Col>
+        <Grid.Col span={4}><NumberInput onChange={formUpdate(form, data, index, database, setDatabase, contentsIndex)} disabled precision={5} radius="md" hideControls description="scale x" placeholder="scale x" {...form.getInputProps('scale_x')}/></Grid.Col>
+        <Grid.Col span={4}><NumberInput onChange={formUpdate(form, data, index, database, setDatabase, contentsIndex)} disabled precision={5} radius="md" hideControls description="scale y" placeholder="scale y" {...form.getInputProps('scale_y')}/></Grid.Col>
+        <Grid.Col span={4}><NumberInput onChange={formUpdate(form, data, index, database, setDatabase, contentsIndex)} disabled precision={5} radius="md" hideControls description="scale z" placeholder="scale z" {...form.getInputProps('scale_z')}/></Grid.Col>
       </Grid>
       </Accordion.Panel>
     </Accordion.Item>

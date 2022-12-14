@@ -102,21 +102,13 @@ interface SidebarProps {
   user: any,
   database: any,
   setDatabase: any,
-  contentsId: any
+  contentsIndex: any
 }
 
 
-export function Sidebar({active, setActive, user, database, setDatabase, contentsId}: SidebarProps) {
+export function Sidebar({active, setActive, user, database, setDatabase, contentsIndex}: SidebarProps) {
   const { classes, cx } = useStyles();
   const [opened, { toggle, close }] = useDisclosure(false);
-  let data;
-  
-  if(user && database !== undefined && contentsId !== "") {
-    data = database.filter(function(object: any) {
-      // idが「1」の配列のみ返します。
-      return object.id === contentsId
-    }).shift()
-  }
 
   const links = link.map((item) => (
     <a
@@ -138,20 +130,14 @@ export function Sidebar({active, setActive, user, database, setDatabase, content
     <ScrollArea offsetScrollbars scrollbarSize={6}>
       {(() => {
         if(active === "エディタ") {
-          console.log(data)
-          if(data !== undefined){
-            return (
-              <Accordion chevronPosition="right" defaultValue="reset-password" variant="separated">
-                {data.json.length > 0 && data.json.map((_data: any, index: number) => (
-                  <SidebarData database={database} setDatabase={setDatabase} data={_data} index={index} />
-                ))}
-              </Accordion>
-            );
-          }else{
-            return <div></div>
-          }
-          
-          
+          console.log("json length : ", database[contentsIndex])
+          return (
+            <Accordion chevronPosition="right" defaultValue="reset-password" variant="separated">
+              {database[contentsIndex].json.length > 0 && database[contentsIndex].json.map((_data: any, index: number) => (
+                <SidebarData database={database} setDatabase={setDatabase} data={_data} index={index} contentsIndex={contentsIndex} />
+              ))}
+            </Accordion>
+          );          
         }else{
           return (
             <>

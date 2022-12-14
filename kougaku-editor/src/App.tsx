@@ -8,6 +8,7 @@ import {
   useRoutes
 } from 'react-router-dom'
 import { Home } from './Home';
+import { Iframe } from './Iframe';
 import { PageNotFound } from './PageNotFound';
 import { MantineProvider, ColorSchemeProvider, ColorScheme } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
@@ -25,6 +26,7 @@ export function App() {
           <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Routes>
               <Route index element={<Admin/>} />
+              <Route path="/iframe/:id" element={<Iframe />} />
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </BrowserRouter>

@@ -14,8 +14,8 @@ softShadows()
 interface EditorProps {
   database:  any,
   setDatabase: any,
-  contentsId: any,
-  setContentsId: any
+  contentsIndex: any,
+  setContentsIndex: any
   uuid: string
 }
 
@@ -26,16 +26,12 @@ function hundleChange (ref: any) {
 
 
 
-export function Editor({ database, setDatabase, contentsId, setContentsId, uuid }: EditorProps) {
+export function Editor({ database, setDatabase, contentsIndex, setContentsIndex, uuid }: EditorProps) {
   const [mode, setMode] = useState<"none" | "translate" | "rotate" | "scale">("none");
-  const [data, setData] = useState(database.filter(function(object: any) {
-    // idが「1」の配列のみ返します。
-    return object.id == contentsId
-  }).shift())
 
   return (
     <>
-      <EditorButton data={data} database={database} setDatabase={setDatabase} setData={setData} />
+      <EditorButton database={database} setDatabase={setDatabase} contentsIndex={contentsIndex} />
       <TransformButton setMode={setMode} />
       <Canvas 
         
@@ -50,8 +46,8 @@ export function Editor({ database, setDatabase, contentsId, setContentsId, uuid 
         <directionalLight castShadow position={[2.5, 5, 5]} intensity={1.5} shadow-mapSize={[1024, 1024]}>
           <orthographicCamera attach="shadow-camera" args={[-5, 5, 5, -5, 1, 50]} />
         </directionalLight>
-        {(data && data.json !== "") && data.json.map((_data: any, index: number) => (
-          <Object database={database} setDatabase={setDatabase} data={data} setData={setData} index={index} mode={mode} key={index} />
+        {(database[contentsIndex] && database[contentsIndex].json !== "") && database[contentsIndex].json.map((_data: any, index: number) => (
+          <Object database={database} setDatabase={setDatabase} data={_data}  index={index} contentsIndex={contentsIndex} mode={mode} key={index} />
         ))}
         
         <mesh scale={1000} receiveShadow rotation={[-Math.PI / 2, 0, 0]}>

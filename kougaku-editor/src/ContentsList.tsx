@@ -1,10 +1,11 @@
 import { useState, useEffect, Suspense } from 'react';
 import { createStyles, Table, ActionIcon, ScrollArea, Group, Box, Menu, UnstyledButton, Text, Container, Button, Paper, TextInput  } from '@mantine/core';
 import { openConfirmModal, openModal } from '@mantine/modals';
-import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons';
+import { IconDotsVertical, IconEdit, IconTrash, IconDeviceTv, IconCode  } from '@tabler/icons';
 import {collection, doc, addDoc, getDocs, query, where, Timestamp, deleteDoc, setDoc } from 'firebase/firestore';
 import { db }  from './firebase';
 import { RenameForm } from './RenameForm'
+import { useClipboard } from '@mantine/hooks';
 
 const useStyles = createStyles((theme) => ({
   control: {
@@ -19,7 +20,7 @@ interface ContentsListProps {
   database:  any,
   setDatabase: any,
   setActive: any,
-  setContentsId: any
+  setContentsIndex: any
   uuid: string
 }
 
@@ -50,8 +51,9 @@ async function deleteItem(database: any, setDatabase: any, id: any, index: numbe
 
 
 
-export function ContentsList({ database, setDatabase, setActive, setContentsId, uuid }: ContentsListProps) {
+export function ContentsList({ database, setDatabase, setActive, setContentsIndex, uuid }: ContentsListProps) {
   const { classes, cx } = useStyles();
+  const clipboard = useClipboard();
   const [selection, setSelection] = useState([1]);
   const deleteModal = (id: any, index: number) =>
     openConfirmModal({
@@ -106,7 +108,7 @@ export function ContentsList({ database, setDatabase, setActive, setContentsId, 
     
             <tr key={item.id} >
                   <td>
-                    <UnstyledButton onClick={() => {setContentsId(item.id); setActive("エディタ")}}>
+                    <UnstyledButton onClick={() => {setContentsIndex(index); setActive("エディタ")}}>
                       <Text size="sm" weight={500}>
                         {item.id}
                       </Text>
@@ -133,6 +135,11 @@ export function ContentsList({ database, setDatabase, setActive, setContentsId, 
                     </Menu.Target>
                   <Menu.Dropdown>
                   <Menu.Item icon={<IconEdit size={14} />}  onClick={() => renameModal(item.id, index, item.name)}>名前を変更</Menu.Item>
+                  <Menu.Item icon={<IconDeviceTv size={14} />}  component="a" href={"/iframe/"+item.id+"?rotation=true"}>プレビューを表示</Menu.Item>
+                  <Menu.Item icon={<IconCode  size={14} />}  onClick={() => 
+                    clipboard.copy('<iframe width="1280" height="720" src="https://kougaku-editor.web.app/iframe/' + item.id + '?rotation=true"></iframe>')} >
+                    埋め込みコードをコピー
+                    </Menu.Item>
                   <Menu.Item icon={<IconTrash size={14} />} onClick={() => deleteModal(item.id, index)} color="red">削除</Menu.Item>
                   </Menu.Dropdown>
                   </Menu>

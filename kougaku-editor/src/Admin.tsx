@@ -94,7 +94,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
 
 export default function Admin() {
   const [user, initialising] = useAuthState(auth);
-  const [contentsId, setContentsId] = useState<string>("");
+  const [contentsIndex, setContentsIndex] = useState<string>("");
   const theme = useMantineTheme();
   const { classes, cx } = useStyles();
   const [opened, { toggle, close }] = useDisclosure(false);
@@ -137,7 +137,7 @@ export default function Admin() {
       navbar={
           
           <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
-            <Sidebar active={active} setActive={setActive} user={user} database={database} setDatabase={setDatabase} contentsId={contentsId} />
+            <Sidebar active={active} setActive={setActive} user={user} database={database} setDatabase={setDatabase} contentsIndex={contentsIndex} />
           </Navbar>
         
       }
@@ -169,11 +169,10 @@ export default function Admin() {
       {(() => {
         if(!user) return <Login />;   // ユーザー情報がない → ログイン画面を表示
         else if (database !== undefined){                        // ユーザー情報がある
-          if(!contentsId) return <ContentsList database={database} setDatabase={setDatabase} setActive={setActive}  setContentsId={setContentsId} uuid={user.uid}/>   // コンテンツID (編集用ID) がない → コンテンツ一覧を表示
+          if(active !== "エディタ") return <ContentsList database={database} setDatabase={setDatabase} setActive={setActive}  setContentsIndex={setContentsIndex} uuid={user.uid}/>   // コンテンツID (編集用ID) がない → コンテンツ一覧を表示
           
           // コンテンツID (編集用ID) がある & データが取得できている → 編集画面へ
-          else if(contentsId !== "") return <Editor database={database} setDatabase={setDatabase} contentsId={contentsId} setContentsId={setContentsId} uuid={user.uid}/>;
-          else return  <PageNotFound />;
+          else                      return <Editor database={database} setDatabase={setDatabase} contentsIndex={contentsIndex} setContentsIndex={setContentsIndex} uuid={user.uid}/>;
         }else return  <PageNotFound />;
       })()}
       </Card.Section>

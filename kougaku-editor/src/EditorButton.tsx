@@ -26,29 +26,26 @@ async function uploadData(data: any, setIsUploading: any) {
 }
 
 
-export function EditorButton({data, database, setDatabase, setData}: any) {
+export function EditorButton({database, setDatabase, contentsIndex}: any) {
   const { classes } = useStyles();
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   useHotkeys([
-    ['ctrl+s', () => uploadData(data, setIsUploading)],
+    ['ctrl+s', () => uploadData(database[contentsIndex], setIsUploading)],
   ]);
 
   async function addObj() {
-    let _data = data;
-    const index = data.length;
+    let _database = await database.slice(0, database.length);
+    const index = database[contentsIndex].length;
 
-    _data.json.push({
+    _database[contentsIndex].json.push({
       'type':     "box",
       'name':     "box",
       'position': [0.0, 0.0, 0.0],
       'rotation': [0.0, 0.0, 0.0],
       'scale':    [1.0, 1.0, 1.0],
     });
-    setData({id: data.id, name: data.name, uuid: data.uuid, json: _data.json, update: data.update});
-    let _database = await database.slice(0, database.length);
 
-    _database[index] = _data;
     setDatabase(_database);
   }
   
@@ -57,7 +54,7 @@ export function EditorButton({data, database, setDatabase, setData}: any) {
       <Button.Group className={classes.buttonlist}>
       <Button variant="default" onClick={addObj}>追加</Button>
       <Button variant="default">表示</Button>
-      <Button variant="default" onClick={() => uploadData(data, setIsUploading)}>保存</Button>
+      <Button variant="default" onClick={() => uploadData(database[contentsIndex], setIsUploading)}>保存</Button>
     </Button.Group>
   );
 }
